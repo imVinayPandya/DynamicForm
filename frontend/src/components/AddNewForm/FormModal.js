@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { Form, Input, Button, Select, Modal, Tooltip } from 'antd';
+import { addNewForm } from '../../utils/api';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -10,7 +11,7 @@ const FormModal = (props) => {
   const [form] = Form.useForm();
   const [addQuestionLoading, setAddQuestionLoading] = useState(false);
   const [showTextArea, setShowTextArea] = useState(false);
-  const handleAddNewForm = useDispatch();
+  const disptach = useDispatch();
 
   const onFieldTypeChange = (value) => {
     // console.log('onFieldTypeChange');
@@ -44,24 +45,22 @@ const FormModal = (props) => {
       onCloseModal();
     }
 
+    const formData = await addNewForm(props.formName, form.getFieldsValue());
     // dispatch add new form
-    handleAddNewForm({
+    disptach({
       type: 'ADD_NEW_FORM',
-      payload: {
-        id: uuidv4(),
-        formName: props.formName,
-        formFields: form.getFieldsValue(),
-        createdAt: new Date().toISOString(),
-      },
+      payload: formData,
     });
     setAddQuestionLoading(false);
     form.resetFields();
+    setShowTextArea(false);
   };
 
   const handleCancel = (value) => {
     // console.log('On cancel');
     onCloseModal();
     form.resetFields();
+    setShowTextArea(false);
   };
 
   return (

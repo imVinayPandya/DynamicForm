@@ -3,9 +3,9 @@ import { countReducer } from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import 'regenerator-runtime/runtime';
 
-function* exampleSaga(value) {
+function* exampleSaga(action) {
   console.log('Example saga reached');
-  yield value;
+  yield action;
 }
 
 const sagaMiddleware = createSagaMiddleware();

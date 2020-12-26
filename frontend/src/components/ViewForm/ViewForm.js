@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
   Form,
   Button,
@@ -9,9 +9,10 @@ import {
   Typography,
   Space,
 } from 'antd';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+
+import { getFormById } from '../../utils/api';
 
 const layout = {
   labelCol: {
@@ -30,6 +31,7 @@ const tailLayout = {
 };
 
 const ViewForm = () => {
+  const [formDetails, setFormDetails] = useState({});
   const [dynamicForm] = Form.useForm();
   const { formId } = useParams();
   // render text field
@@ -66,7 +68,9 @@ const ViewForm = () => {
       >
         <Radio.Group onChange={() => {}} value={0}>
           {values.map((v) => (
-            <Radio value={v}>{v.toUpperCase()}</Radio>
+            <Radio key={v} value={v}>
+              {v.toUpperCase()}
+            </Radio>
           ))}
         </Radio.Group>
       </Form.Item>
@@ -89,66 +93,69 @@ const ViewForm = () => {
       >
         <Checkbox.Group onChange={() => {}} value={0}>
           {values.map((v) => (
-            <Checkbox value={v}>{v.toUpperCase()}</Checkbox>
+            <Checkbox key={v} value={v}>
+              {v.toUpperCase()}
+            </Checkbox>
           ))}
         </Checkbox.Group>
       </Form.Item>
     );
   };
 
-  const renderForm = ([formDetails]) => {
-    const submitForm = (value) => {
-      console.log('Form submitted', value);
-    };
-
-    return (
-      <Fragment>
-        {formDetails.formName && (
-          <Typography.Title>{formDetails.formName}</Typography.Title>
-        )}
-        <Divider />
-        <Form
-          {...layout}
-          form={dynamicForm}
-          name="dynamic-form"
-          onFinish={submitForm}
-        >
-          {formDetails &&
-            formDetails.formFields &&
-            formDetails.formFields.answerType === 'text' &&
-            renderTextField(formDetails.formFields.question)}
-          {formDetails &&
-            formDetails.formFields &&
-            formDetails.formFields.answerType === 'radio' &&
-            renderRadioField(
-              formDetails.formFields.question,
-              formDetails.formFields.answers
-            )}
-          {formDetails &&
-            formDetails.formFields &&
-            formDetails.formFields.answerType === 'checkbox' &&
-            renderCheckboxField(
-              formDetails.formFields.question,
-              formDetails.formFields.answers
-            )}
-          <Form.Item {...tailLayout}>
-            <Space>
-              <Button type="primary" htmlType="submit">
-                Submit Form
-              </Button>
-              <Link to="/">Go back</Link>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Fragment>
-    );
+  const submitForm = (value) => {
+    console.log('Form submitted', value);
   };
 
-  const form = useSelector((state) =>
-    renderForm(state.filter((form) => form.id === formId))
-  );
+  const getFormDetails = async () => {
+    const formDetails = await getFormById(formId);
+    setFormDetails(formDetails);
+  };
 
-  return form;
+  useEffect(() => {
+    getFormDetails();
+  }, []);
+
+  return (
+    <Fragment>
+      {formDetails.formName && (
+        <Typography.Title>{formDetails.formName}</Typography.Title>
+      )}
+      <Divider />
+      <Form
+        {...layout}
+        form={dynamicForm}
+        name="dynamic-form"
+        onFinish={submitForm}
+      >
+        {formDetails &&
+          formDetails.formFields &&
+          formDetails.formFields.answerType === 'text' &&
+          renderTextField(formDetails.formFields.question)}
+        {formDetails &&
+          formDetails.formFields &&
+          formDetails.formFields.answerType === 'radio' &&
+          renderRadioField(
+            formDetails.formFields.question,
+            formDetails.formFields.answers
+          )}
+        {formDetails &&
+          formDetails.formFields &&
+          formDetails.formFields.answerType === 'checkbox' &&
+          renderCheckboxField(
+            formDetails.formFields.question,
+            formDetails.formFields.answers
+          )}
+        <Form.Item {...tailLayout}>
+          <Space>
+            <Button type="primary" htmlType="submit">
+              Submit Form
+            </Button>
+            <Link to="/">Go back</Link>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Fragment>
+  );
 };
 
 export default ViewForm;

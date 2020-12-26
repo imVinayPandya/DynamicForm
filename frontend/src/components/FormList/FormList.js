@@ -1,16 +1,31 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
-
+import { getForms } from '../../utils/api';
 const FormList = () => {
+  const disptach = useDispatch();
+
+  const getAllForms = async () => {
+    // get all forms from DB
+    let allForms = await getForms();
+    // dispatch all forms to redux store
+    disptach({
+      type: 'ALL_FORMS',
+      payload: allForms,
+    });
+  };
+
+  useEffect(() => {
+    getAllForms();
+  }, []);
+
   const getData = (forms) => {
     if (forms.length === 0) return [];
     return forms.map((form) => ({
       key: form.id,
-      id: form.id,
-      name: form.formName,
-      createdAt: form.createdAt,
+      ...form,
     }));
   };
   const tableData = useSelector((state) => getData(state));
@@ -18,13 +33,19 @@ const FormList = () => {
   const columns = [
     {
       title: 'Form Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'formName',
+      key: 'formName',
     },
     {
       title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
+    },
+    {
+      title: 'Form Type',
+      dataIndex: 'formFields',
+      key: 'formFields',
+      render: ({ answerType }) => answerType,
     },
     {
       title: 'Preview',
