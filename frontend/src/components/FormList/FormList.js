@@ -48,6 +48,12 @@ const FormList = () => {
       render: ({ answerType }) => answerType,
     },
     {
+      title: 'Response Count',
+      dataIndex: 'formResponses',
+      key: 'formResponses',
+      render: ({ totalCount }) => totalCount,
+    },
+    {
       title: 'Preview',
       dataIndex: 'id',
       key: 'id',

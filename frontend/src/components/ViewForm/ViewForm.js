@@ -10,9 +10,9 @@ import {
   Space,
 } from 'antd';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
-import { getFormById } from '../../utils/api';
+import { getFormById, addFormResponse } from '../../utils/api';
 
 const layout = {
   labelCol: {
@@ -30,7 +30,7 @@ const tailLayout = {
   },
 };
 
-const ViewForm = () => {
+const ViewForm = (props) => {
   const [formDetails, setFormDetails] = useState({});
   const [dynamicForm] = Form.useForm();
   const { formId } = useParams();
@@ -102,8 +102,11 @@ const ViewForm = () => {
     );
   };
 
-  const submitForm = (value) => {
+  const submitForm = async (value) => {
     console.log('Form submitted', value);
+    await addFormResponse(formId, value);
+    dynamicForm.resetFields();
+    props.history.goBack();
   };
 
   const getFormDetails = async () => {
@@ -158,4 +161,4 @@ const ViewForm = () => {
   );
 };
 
-export default ViewForm;
+export default withRouter(ViewForm);

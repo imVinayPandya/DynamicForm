@@ -10,15 +10,26 @@ const graphql = (query, variables = {}) => {
   return graphQLClient.request(query, variables);
 };
 
+export default graphql;
+
+////////////////////////////////////
+//
+//  Forms Api
+//
+////////////////////////////////////
+
 export const getForms = async () => {
   const query = gql`
     query GetForms {
       forms(orderBy: CREATED_AT_DESC) {
         nodes {
-          formFields
-          formName
-          createdAt
           id
+          formName
+          formFields
+          createdAt
+          formResponses {
+            totalCount
+          }
         }
       }
     }
@@ -77,4 +88,37 @@ export const addNewForm = async (formName, formFields) => {
   return form;
 };
 
-export default graphql;
+////////////////////////////////////
+//
+//  Forms Response Api
+//
+////////////////////////////////////
+
+export const addFormResponse = async (formId, answers) => {
+  const query = gql`
+    mutation CreateFormResponse($body: CreateFormResponseInput!) {
+      createFormResponse(input: $body) {
+        formResponse {
+          id
+          formId
+          answers
+          createdAt
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    body: {
+      formResponse: {
+        formId,
+        answers,
+      },
+    },
+  };
+
+  const {
+    createFormResponse: { formResponse },
+  } = await graphql(query, variables);
+  return formResponse;
+};
