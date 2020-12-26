@@ -25,14 +25,14 @@ const FormModal = (props) => {
     setAddQuestionLoading(true);
     let hasError = false;
     // trigger form validate manually, because we are using form in modal
-    const formValues = await form.validateFields().catch((errors) => {
+    const formFields = await form.validateFields().catch((errors) => {
       setAddQuestionLoading(false);
       return errors.errorFields;
     });
 
-    // if formValues is array then check for errors
-    if (Array.isArray(formValues)) {
-      hasError = formValues.some((field) => {
+    // if formFields is array then check for errors
+    if (Array.isArray(formFields)) {
+      hasError = formFields.some((field) => {
         if (field && field.errors && field.errors.length > 0) {
           return true;
         }
@@ -50,16 +50,18 @@ const FormModal = (props) => {
       payload: {
         id: uuidv4(),
         formName: props.formName,
-        formValues: form.getFieldsValue(),
+        formFields: form.getFieldsValue(),
         createdAt: new Date().toISOString(),
       },
     });
     setAddQuestionLoading(false);
+    form.resetFields();
   };
 
   const handleCancel = (value) => {
     // console.log('On cancel');
     onCloseModal();
+    form.resetFields();
   };
 
   return (

@@ -29,6 +29,7 @@ const AddNewForm = () => {
 
   const onCloseModal = () => {
     setShowModal(false);
+    form.resetFields();
   };
 
   return (

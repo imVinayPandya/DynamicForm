@@ -1,5 +1,5 @@
 import './App.css';
-import { Button, Layout } from 'antd';
+import { Layout, Divider, Typography } from 'antd';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import AddNewForm from './components/AddNewForm/AddNewForm';
@@ -13,10 +13,13 @@ function App() {
     <div className="App">
       <Router>
         <Layout>
-          <Header>header</Header>
+          <Header></Header>
           <Layout>
-            <Sider>left sidebar</Sider>
-            <Content>
+            <Sider></Sider>
+            <Content style={{ minHeight: '1000px' }}>
+              <Divider>
+                <Typography.Title>Create Dynamic Form</Typography.Title>
+              </Divider>
               <Switch>
                 <Route path="/:formId">
                   <ViewForm />
@@ -27,9 +30,9 @@ function App() {
                 </Route>
               </Switch>
             </Content>
-            <Sider>right sidebar</Sider>
+            <Sider></Sider>
           </Layout>
-          {/* <Footer>footer</Footer> */}
+          <Footer>Created by Vinay Pandya</Footer>
         </Layout>
       </Router>
     </div>

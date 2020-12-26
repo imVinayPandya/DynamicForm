@@ -22,21 +22,21 @@ const FormList = () => {
       key: 'name',
     },
     {
-      title: 'URL',
-      dataIndex: 'id',
-      key: 'id',
-      render: (id) => <Link to={`/${id}`}>{id}</Link>,
-    },
-    {
       title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
+    },
+    {
+      title: 'Preview',
+      dataIndex: 'id',
+      key: 'id',
+      render: (id) => <Link to={`/${id}`}>View</Link>,
     },
   ];
 
   return (
     <Fragment>
-      <Table columns={columns} dataSource={tableData} />
+      <Table columns={columns} dataSource={tableData} pagination={false} />
     </Fragment>
   );
 };

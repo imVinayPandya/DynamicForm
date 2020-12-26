@@ -87,11 +87,11 @@ const ViewForm = () => {
           },
         ]}
       >
-        <Radio.Group onChange={() => {}} value={0}>
+        <Checkbox.Group onChange={() => {}} value={0}>
           {values.map((v) => (
             <Checkbox value={v}>{v.toUpperCase()}</Checkbox>
           ))}
-        </Radio.Group>
+        </Checkbox.Group>
       </Form.Item>
     );
   };
@@ -114,22 +114,22 @@ const ViewForm = () => {
           onFinish={submitForm}
         >
           {formDetails &&
-            formDetails.formValues &&
-            formDetails.formValues.answerType === 'text' &&
-            renderTextField(formDetails.formValues.question)}
+            formDetails.formFields &&
+            formDetails.formFields.answerType === 'text' &&
+            renderTextField(formDetails.formFields.question)}
           {formDetails &&
-            formDetails.formValues &&
-            formDetails.formValues.answerType === 'radio' &&
+            formDetails.formFields &&
+            formDetails.formFields.answerType === 'radio' &&
             renderRadioField(
-              formDetails.formValues.question,
-              formDetails.formValues.answers
+              formDetails.formFields.question,
+              formDetails.formFields.answers
             )}
           {formDetails &&
-            formDetails.formValues &&
-            formDetails.formValues.answerType === 'checkbox' &&
+            formDetails.formFields &&
+            formDetails.formFields.answerType === 'checkbox' &&
             renderCheckboxField(
-              formDetails.formValues.question,
-              formDetails.formValues.answers
+              formDetails.formFields.question,
+              formDetails.formFields.answers
             )}
           <Form.Item {...tailLayout}>
             <Space>
