@@ -68,6 +68,9 @@ export const addNewForm = async (formName, formFields) => {
           formName
           formFields
           createdAt
+          formResponses {
+            totalCount
+          }
         }
       }
     }
